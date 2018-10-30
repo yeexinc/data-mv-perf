@@ -21,7 +21,6 @@ async function run(id: number, total: number, batchSize: number) {
     const payload = assetGenerator.batchGet(size);
     await DB.insert('assets', payload, columns);
     count = count + batchSize;
-    logger.info(`Generator ${id} created ${count} assets`);
   }
 
   logger.info(`Generator ${id} finished`);
@@ -33,6 +32,7 @@ function runall(clients: number, total: number, batchSize: number) {
 }
 
 async function main() {
+  await DB.init();
   const clients: number = ConfigManager.getInstance().getValue('clients');
   const assetCount: number = ConfigManager.getInstance().getValue('assetCount');
   await Promise.all(runall(clients, assetCount, 5));
