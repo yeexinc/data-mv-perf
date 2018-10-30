@@ -1,38 +1,50 @@
 {
-  "mv:sql:host": {
+  "dbHost": {
     "default": "",
     "description": "Database host"
   },
-  "mv:sql:port": {
+  "dbPort": {
     "default": 3306,
     "description": "Database port"
   },
-  "mv:sql:credentials": {
-    "default": [],
-    "description": "Array of { user, password }, index 0 is current password, followed by previous password"
+  "dbCredential": {
+    "default": {},
+    "description": "{ user, password }"
   },
-  "mv:sql:db": {
+  "db": {
     "default": "",
     "description": "Database name"
   },
-  "mv:enableDbLogging": {
+  "enableDbLogging": {
     "default": false,
     "description": "If logging is enabled for the database, setting true will log all the SQL statements"
   },
-  "mv:maxQueryExecutionTime": {
+  "maxQueryExecutionTime": {
     "default": 300,
     "description": "Maximum time in ms to be considered slow query"
   },
-  "clients": {
+  "runnerCount": {
     "default": 20,
-    "description": "How many clients to connect to the database"
+    "description": "How many runners to insert assets"
   },
   "assetCount": {
     "default": 100,
     "description": "How many assets to create"
   },
+  "aceidCount": {
+    "default": 1000,
+    "description": "How many aceids"
+  },
+  "branchGuidCount": {
+    "default": 100000,
+    "description": "How many branch guids"
+  },
   "batchSize": {
     "default": 5,
     "description": "Batch Size"
+  },
+  "templateCount": {
+    "default": 100,
+    "description": "How many templates"
   }
 }

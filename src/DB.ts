@@ -7,52 +7,33 @@ const logger = Logger.getLogger('DB');
 
 export default class DB {
   public static async init() {
-    const host: string = ConfigManager.getInstance().getValue('mv:sql:host');
-    const port: number = ConfigManager.getInstance().getValue('mv:sql:port');
-    const credentials: [any] = ConfigManager.getInstance().getValue('mv:sql:credentials');
+    const host: string = ConfigManager.getInstance().getValue('dbHost');
+    const port: number = ConfigManager.getInstance().getValue('dbPort');
+    const credential: any = ConfigManager.getInstance().getValue('dbCredential');
     const type = 'mysql';
-    const database: string = ConfigManager.getInstance().getValue('mv:sql:db');
-    const logging = ConfigManager.getInstance().getValue('mv:enableDbLogging');
-    const maxQueryExecutionTime = ConfigManager.getInstance().getValue('mv:maxQueryExecutionTime');
-
-    if (_.isEmpty(credentials)) {
-      const sqlUser: string = ConfigManager.getInstance().getValue('mv:sql:user');
-      const sqlPassword: string = ConfigManager.getInstance().getValue('mv:sql:password');
-
-      if (sqlUser && sqlPassword) {
-        logger.warn('Not using sql credentials from the array');
-        credentials.push({user: sqlUser, password: sqlPassword});
-      } else {
-        logger.error('Empty sql credentials array setting');
-        return;
-      }
-    }
+    const database: string = ConfigManager.getInstance().getValue('db');
+    const logging = ConfigManager.getInstance().getValue('enableDbLogging');
+    const maxQueryExecutionTime = ConfigManager.getInstance().getValue('maxQueryExecutionTime');
 
     let connection;
-    let username;
-    const numPwdsToTry = Math.min(credentials.length, 2);
 
-    for (let index = 0; index < numPwdsToTry; ++index) {
-      const cred: any = credentials[index];
-      username = cred.user;
-      const password = cred.password;
-      try {
-        connection = await createConnection ({
-          type,
-          host,
-          port,
-          username,
-          password,
-          database,
-          synchronize: false,
-          logger: new DbLogger(logging),
-          maxQueryExecutionTime,
-          supportBigNumbers: true
-        });
-        break;
-      } catch (err) {
-        logger.error(`Sql creationConnection failed with err = ${err.message}`);
-      }
+    const username = credential.user;
+    const password = credential.password;
+    try {
+      connection = await createConnection ({
+        type,
+        host,
+        port,
+        username,
+        password,
+        database,
+        synchronize: false,
+        logger: new DbLogger(logging),
+        maxQueryExecutionTime,
+        supportBigNumbers: true
+      });
+    } catch (err) {
+      logger.error(`Sql creationConnection failed with err = ${err.message}`);
     }
 
     if (_.isNil(connection) || connection.isConnected === false) {

@@ -7,14 +7,10 @@ import ConfigManager from './ConfigManager';
 import Logger from './Logger';
 const logger = Logger.getLogger('main');
 
-const idGenerator = new AceidBranchGuidGenerator(10, 10);
-const templateGenerator = new TemplateGenerator(100);
-const assetGenerator = new AssetGenerator(idGenerator, templateGenerator);
-const columns = ['aceid', 'branch_guid', 'guid', 'name', 'template'];
-
-async function run(id: number, total: number, batchSize: number) {
+async function run(assetGenerator: AssetGenerator, id: number, total: number, batchSize: number) {
   logger.info(`Generator ${id} starts`);
 
+  const columns = ['aceid', 'branch_guid', 'guid', 'name', 'template'];
   let count = 0;
   while (count < total) {
     const size = count + batchSize <= total ? batchSize : total - count;
@@ -26,16 +22,27 @@ async function run(id: number, total: number, batchSize: number) {
   logger.info(`Generator ${id} finished`);
 }
 
-function runall(clients: number, total: number, batchSize: number) {
+function runall(assetGenerator: AssetGenerator, clients: number, total: number, batchSize: number) {
   const totalPerRun = total / clients;
-  return _.range(clients).map((id) => run(id, totalPerRun, batchSize));
+  return _.range(clients).map((id) => run(assetGenerator, id, totalPerRun, batchSize));
 }
 
 async function main() {
-  await DB.init();
-  const clients: number = ConfigManager.getInstance().getValue('clients');
+  const runnerCount: number = ConfigManager.getInstance().getValue('runnerCount');
   const assetCount: number = ConfigManager.getInstance().getValue('assetCount');
-  await Promise.all(runall(clients, assetCount, 5));
+  const aceidCount: number = ConfigManager.getInstance().getValue('aceidCount');
+  const branchGuidCount: number = ConfigManager.getInstance().getValue('branchGuidCount');
+  const templateCount: number = ConfigManager.getInstance().getValue('templateCount');
+  const batchSize: number = ConfigManager.getInstance().getValue('batchSize');
+
+  const idGenerator = new AceidBranchGuidGenerator(aceidCount, branchGuidCount);
+  const templateGenerator = new TemplateGenerator(templateCount);
+  const assetGenerator = new AssetGenerator(idGenerator, templateGenerator);
+
+  logger.info({ aceidCount, branchGuidCount, templateCount, runnerCount, batchSize, assetCount});
+
+  await DB.init();
+  await Promise.all(runall(assetGenerator, runnerCount, assetCount, batchSize));
   await DB.closeConnection();
 }
 
