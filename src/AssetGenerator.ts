@@ -4,13 +4,10 @@ import Random from './Random';
 import _ from 'lodash';
 
 export default class AssetGenerator {
-  private static SQL = 'INSERT INTO ASSETS (aceid, branch_guid, guid, name, template) VALUES(?, ?, ?, ?, ?);';
-
   constructor(private idGenerator: AceidBranchGuidGenerator, private templateGenerator: TemplateGenerator) {
   }
 
   public batchGet(size: number) {
-    // const queries = _.times(size, () => AssetGenerator.SQL).join('');
     const params: any[] = [];
 
     _.times(size, () => {

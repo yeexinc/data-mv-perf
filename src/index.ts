@@ -15,6 +15,7 @@ async function generate(seq: number) {
   logger.info(`Generator ${seq} starts`);
   const paylod = assetGenerator.batchGet(5);
   await DB.insert('assets', paylod, columns);
+  logger.info(`Generator ${seq} stopped`);
 }
 
 function runall() {
