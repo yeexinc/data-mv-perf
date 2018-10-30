@@ -1,4 +1,3 @@
-import ConfigManager from './ConfigManager';
 import Logger from './Logger';
 import DbLogger from './DBLogger';
 import { createConnection, getConnection, EntityManager } from 'typeorm';
@@ -7,13 +6,12 @@ const logger = Logger.getLogger('DB');
 
 export default class DB {
   public static async init() {
-    const host: string = ConfigManager.getInstance().getValue('dbHost');
-    const port: number = ConfigManager.getInstance().getValue('dbPort');
-    const credential: any = ConfigManager.getInstance().getValue('dbCredential');
+    const host = process.env.dbHost as string;
+    const port = Number.parseInt(process.env.dbPort as string, 10);
+    const credential: any = JSON.parse(process.env.dbCredential as string);
     const type = 'mysql';
-    const database: string = ConfigManager.getInstance().getValue('db');
-    const logging = ConfigManager.getInstance().getValue('enableDbLogging');
-    const maxQueryExecutionTime = ConfigManager.getInstance().getValue('maxQueryExecutionTime');
+    const database: string = process.env.db as string;
+    const maxQueryExecutionTime = Number.parseInt(process.env.maxQueryExecutionTime as string, 10);
 
     let connection;
 
@@ -28,7 +26,7 @@ export default class DB {
         password,
         database,
         synchronize: false,
-        logger: new DbLogger(logging),
+        logger: new DbLogger(true),
         maxQueryExecutionTime,
         supportBigNumbers: true
       });

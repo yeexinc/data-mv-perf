@@ -12,12 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://git.autodesk.com/forge/data-mv-perf"
+    "url": "https://github.com/ke-yu/data-mv-perf"
   },
   "author": "sudo",
   "license": "UNLICENSED",
   "devDependencies": {
-    "@adsk/lynx-settings": "^4.0.5",
     "@types/lodash": "^4.14.108",
     "@types/mysql": "^2.15.5",
     "@types/node": "^9.6.5",

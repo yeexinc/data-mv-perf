@@ -29,10 +29,12 @@ export default class DbLogger implements Logger {
         LoggerUtil.logInfo(logger, undefined, {query, parameters, 'execution time': time});
         this.logQueryRunner(queryRunner);
     }
+
     public logSchemaBuild(message: string, queryRunner?: QueryRunner | undefined) {
         LoggerUtil.logInfo(logger, undefined, message);
         this.logQueryRunner(queryRunner);
     }
+
     public logMigration(message: string, queryRunner?: QueryRunner | undefined) {
         LoggerUtil.logInfo(logger, undefined, message);
         this.logQueryRunner(queryRunner);

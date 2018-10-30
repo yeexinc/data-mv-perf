@@ -3,7 +3,6 @@ import _ from 'lodash';
 import AceidBranchGuidGenerator from './AceidBranchGuidGenerator';
 import TemplateGenerator from './TemplateGenerator';
 import AssetGenerator from './AssetGenerator';
-import ConfigManager from './ConfigManager';
 import Logger from './Logger';
 const logger = Logger.getLogger('main');
 
@@ -28,12 +27,12 @@ function runall(assetGenerator: AssetGenerator, clients: number, total: number, 
 }
 
 async function main() {
-  const runnerCount: number = ConfigManager.getInstance().getValue('runnerCount');
-  const assetCount: number = ConfigManager.getInstance().getValue('assetCount');
-  const aceidCount: number = ConfigManager.getInstance().getValue('aceidCount');
-  const branchGuidCount: number = ConfigManager.getInstance().getValue('branchGuidCount');
-  const templateCount: number = ConfigManager.getInstance().getValue('templateCount');
-  const batchSize: number = ConfigManager.getInstance().getValue('batchSize');
+  const runnerCount = Number.parseInt(process.env.runnerCount as string, 10);
+  const assetCount = Number.parseInt(process.env.assetCount as string, 10);
+  const aceidCount = Number.parseInt(process.env.aceidCount as string, 10);
+  const branchGuidCount = Number.parseInt(process.env.branchGuidCount as string, 10);
+  const templateCount = Number.parseInt(process.env.templateCount as string, 10);
+  const batchSize = Number.parseInt(process.env.batchSize as string, 10);
 
   const idGenerator = new AceidBranchGuidGenerator(aceidCount, branchGuidCount);
   const templateGenerator = new TemplateGenerator(templateCount);
