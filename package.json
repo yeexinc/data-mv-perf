@@ -28,12 +28,9 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
-    "app-root-dir": "^1.0.2",
     "lodash": "^4.17.10",
     "log4js": "^3.0.6",
     "mysql": "^2.15.0",
-    "node-cache": "^4.2.0",
-    "reflect-metadata": "^0.1.12",
     "typeorm": "^0.2.7",
     "uuid": "^3.3.2"
   }
