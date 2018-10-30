@@ -1,5 +1,4 @@
 import Logger from './Logger';
-import DbLogger from './DBLogger';
 import { createConnection, getConnection, EntityManager } from 'typeorm';
 import _ from 'lodash';
 const logger = Logger.getLogger('DB');
@@ -26,7 +25,6 @@ export default class DB {
         password,
         database,
         synchronize: false,
-        logger: new DbLogger(true),
         maxQueryExecutionTime,
         supportBigNumbers: true
       });
