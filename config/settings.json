@@ -22,5 +22,17 @@
   "mv:maxQueryExecutionTime": {
     "default": 300,
     "description": "Maximum time in ms to be considered slow query"
+  },
+  "clients": {
+    "default": 20,
+    "description": "How many clients to connect to the database"
+  },
+  "assetCount": {
+    "default": 100,
+    "description": "How many assets to create"
+  },
+  "batchSize": {
+    "default": 5,
+    "description": "Batch Size"
   }
 }

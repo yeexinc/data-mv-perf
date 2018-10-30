@@ -3,6 +3,7 @@ import _ from 'lodash';
 import AceidBranchGuidGenerator from './AceidBranchGuidGenerator';
 import TemplateGenerator from './TemplateGenerator';
 import AssetGenerator from './AssetGenerator';
+import ConfigManager from './ConfigManager';
 import Logger from './Logger';
 const logger = Logger.getLogger('main');
 
@@ -11,19 +12,30 @@ const templateGenerator = new TemplateGenerator(100);
 const assetGenerator = new AssetGenerator(idGenerator, templateGenerator);
 const columns = ['aceid', 'branch_guid', 'guid', 'name', 'template'];
 
-async function generate(seq: number) {
-  logger.info(`Generator ${seq} starts`);
-  const paylod = assetGenerator.batchGet(5);
-  await DB.insert('assets', paylod, columns);
-  logger.info(`Generator ${seq} stopped`);
+async function run(id: number, total: number, batchSize: number) {
+  logger.info(`Generator ${id} starts`);
+
+  let count = 0;
+  while (count < total) {
+    const size = count + batchSize <= total ? batchSize : total - count;
+    const payload = assetGenerator.batchGet(size);
+    await DB.insert('assets', payload, columns);
+    count = count + batchSize;
+    logger.info(`Generator ${id} created ${count} assets`);
+  }
+
+  logger.info(`Generator ${id} finished`);
 }
 
-function runall() {
-  return _.range(5).map((n) => generate(n));
+function runall(clients: number, total: number, batchSize: number) {
+  const totalPerRun = total / clients;
+  return _.range(clients).map((id) => run(id, totalPerRun, batchSize));
 }
 
 async function main() {
-  await Promise.all(runall());
+  const clients: number = ConfigManager.getInstance().getValue('clients');
+  const assetCount: number = ConfigManager.getInstance().getValue('assetCount');
+  await Promise.all(runall(clients, assetCount, 5));
   await DB.closeConnection();
 }
 
