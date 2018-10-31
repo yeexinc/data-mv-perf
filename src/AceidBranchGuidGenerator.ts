@@ -1,12 +1,9 @@
 import Random from './Random';
+import IAceidBranchGuidGenerator from './IAceidBranchGuidGenerator';
+import  AceidBranchGuid from './IAceidBranchGuid';
 import _ from 'lodash';
 
-export interface AceidBranchGuid {
-    aceid: Buffer;
-    branchGuid: Buffer;
-}
-
-export default class AceidBranchGuidGenerator {
+export default class AceidBranchGuidGenerator implements IAceidBranchGuidGenerator {
   private aceidBranchGuids: AceidBranchGuid[];
 
   constructor(private aceidCount: number, private branchGuidCount: number) {
@@ -25,3 +22,8 @@ export default class AceidBranchGuidGenerator {
       return this.aceidBranchGuids[index];
   }
 }
+
+
+
+
+

@@ -7,6 +7,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "tslint": "npm run lint",
     "start": "node -r dotenv/config ./build/index.js",
+    "test-lookup": "node -r dotenv/config ./build/Test-with-lookup-table.js",
     "clean": "rm -rf ./build",
     "build": "tsc"
   },

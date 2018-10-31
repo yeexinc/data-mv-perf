@@ -1,10 +1,10 @@
-import AceidBranchGuidGenerator from './AceidBranchGuidGenerator';
 import TemplateGenerator from './TemplateGenerator';
 import Random from './Random';
 import _ from 'lodash';
+import IAceidBranchGuidGenerator from './IAceidBranchGuidGenerator';
 
 export default class AssetGenerator {
-  constructor(private idGenerator: AceidBranchGuidGenerator, private templateGenerator: TemplateGenerator) {
+  constructor(private idGenerator: IAceidBranchGuidGenerator, private templateGenerator: TemplateGenerator) {
   }
 
   public batchGet(size: number) {

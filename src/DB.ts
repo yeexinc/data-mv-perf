@@ -127,16 +127,19 @@ export default class DB {
     } else {
       await en.delete(table, condition);
     }
-
   }
 
   public static async executeSQL(query: string, params?: any[]): Promise<void> {
-    if (!DB.initialized) {
-      await DB.init();
+    try {
+      if (!DB.initialized) {
+        await DB.init();
+      }
+      const results = await getConnection().manager.query(query, params);
+      return results;
     }
-    const results = await getConnection().manager.query(query, params);
-    return results;
-
+    catch(err){
+      logger.error(`execute query error ${err}`);
+    }    
   }
 
   public static async executeSQLWithTransaction(ctx: any,  callback: (values: any, en: EntityManager) => any) {
