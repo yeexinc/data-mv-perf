@@ -26,7 +26,12 @@ export default class DB {
         database,
         synchronize: false,
         maxQueryExecutionTime,
-        supportBigNumbers: true
+        supportBigNumbers: true,
+        extra: {
+          pool: {
+            max: 100
+          }
+        }
       });
     } catch (err) {
       logger.error(`Sql creationConnection failed with err = ${err.message}`);
