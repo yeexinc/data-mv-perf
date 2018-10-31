@@ -11,6 +11,7 @@ export default class DB {
     const type = 'mysql';
     const database: string = process.env.db as string;
     const maxQueryExecutionTime = Number.parseInt(process.env.maxQueryExecutionTime as string, 10);
+    const connectionLimit = Number.parseInt(process.env.connectionLimit as string, 10);
 
     let connection;
 
@@ -28,7 +29,7 @@ export default class DB {
         maxQueryExecutionTime,
         supportBigNumbers: true,
         extra: {
-          connectionLimit: 100
+          connectionLimit
         }
       });
     } catch (err) {
