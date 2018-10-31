@@ -129,7 +129,7 @@ export default class DB {
 
   }
 
-  public static async executeSQL(query: string, params?: any): Promise<void> {
+  public static async executeSQL(query: string, params?: any[]): Promise<void> {
     if (!DB.initialized) {
       await DB.init();
     }

@@ -4,9 +4,10 @@ import AceidBranchGuidGenerator from './AceidBranchGuidGenerator';
 import TemplateGenerator from './TemplateGenerator';
 import AssetGenerator from './AssetGenerator';
 import Logger from './Logger';
+import Random from './Random';
 const logger = Logger.getLogger('main');
 
-async function run(assetGenerator: AssetGenerator, id: number, total: number, batchSize: number) {
+async function batchInsertionRun(assetGenerator: AssetGenerator, id: number, total: number, batchSize: number) {
   logger.info(`Runner ${id} starts`);
 
   const columns = ['aceid', 'branch_guid', 'guid', 'name', 'template'];
@@ -21,9 +22,43 @@ async function run(assetGenerator: AssetGenerator, id: number, total: number, ba
   logger.info(`Runner ${id} finished`);
 }
 
-function runall(assetGenerator: AssetGenerator, clients: number, total: number, batchSize: number) {
-  const totalPerRun = total / clients;
-  return _.range(clients).map((id) => run(assetGenerator, id, totalPerRun, batchSize));
+async function singleInsertionRun(
+  idGenerator: AceidBranchGuidGenerator,
+  templateGenerator: TemplateGenerator,
+  id: number,
+  total: number) {
+
+  logger.info(`Runner ${id} starts`);
+
+  let count = 0;
+  while (count < total) {
+    const idGuid = idGenerator.get();
+    const params = [idGuid.aceid, idGuid.branchGuid, Random.guid(), Random.str(4), templateGenerator.get()];
+
+    await DB.executeSQL(
+      'INSERT INTO assets (aceid, branch_guid, guid, name, template) VALUES(?, ?, ?, ?, ?)',
+      params
+    );
+    count = count + 1;
+  }
+
+  logger.info(`Runner ${id} finished`);
+}
+
+function runall(
+  idGenerator: AceidBranchGuidGenerator,
+  templateGenerator: TemplateGenerator,
+  runnerCount: number,
+  total: number,
+  batchSize: number) {
+
+  const totalPerRun = total / runnerCount;
+  if (batchSize === 1) {
+    return _.range(runnerCount).map((id) => singleInsertionRun(idGenerator, templateGenerator, id, totalPerRun));
+  } else {
+    const assetGenerator = new AssetGenerator(idGenerator, templateGenerator);
+    return _.range(runnerCount).map((id) => batchInsertionRun(assetGenerator, id, totalPerRun, batchSize));
+  }
 }
 
 async function main() {
@@ -36,13 +71,14 @@ async function main() {
 
   const idGenerator = new AceidBranchGuidGenerator(aceidCount, branchGuidCount);
   const templateGenerator = new TemplateGenerator(templateCount);
-  const assetGenerator = new AssetGenerator(idGenerator, templateGenerator);
 
   logger.info({ aceidCount, branchGuidCount, templateCount, runnerCount, batchSize, assetCount});
 
   await DB.init();
-  await Promise.all(runall(assetGenerator, runnerCount, assetCount, batchSize));
+  await Promise.all(runall(idGenerator, templateGenerator, runnerCount, assetCount, batchSize));
   await DB.closeConnection();
+
+  logger.info('done');
 }
 
 main();
