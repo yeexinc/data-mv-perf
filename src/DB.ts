@@ -28,9 +28,7 @@ export default class DB {
         maxQueryExecutionTime,
         supportBigNumbers: true,
         extra: {
-          pool: {
-            connectionLimit: 100
-          }
+          connectionLimit: 100
         }
       });
     } catch (err) {
