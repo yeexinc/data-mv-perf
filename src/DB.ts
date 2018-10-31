@@ -29,7 +29,7 @@ export default class DB {
         supportBigNumbers: true,
         extra: {
           pool: {
-            max: 100
+            connectionLimit: 100
           }
         }
       });

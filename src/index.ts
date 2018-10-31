@@ -7,7 +7,7 @@ import Logger from './Logger';
 const logger = Logger.getLogger('main');
 
 async function run(assetGenerator: AssetGenerator, id: number, total: number, batchSize: number) {
-  logger.info(`Generator ${id} starts`);
+  logger.info(`Runner ${id} starts`);
 
   const columns = ['aceid', 'branch_guid', 'guid', 'name', 'template'];
   let count = 0;
@@ -18,7 +18,7 @@ async function run(assetGenerator: AssetGenerator, id: number, total: number, ba
     count = count + batchSize;
   }
 
-  logger.info(`Generator ${id} finished`);
+  logger.info(`Runner ${id} finished`);
 }
 
 function runall(assetGenerator: AssetGenerator, clients: number, total: number, batchSize: number) {
