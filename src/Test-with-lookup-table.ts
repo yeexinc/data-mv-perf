@@ -37,7 +37,7 @@ async function singleInsertionRun(
     const params = [idGuid.aceid, idGuid.branchGuid, Random.guid(), Random.str(4), templateGenerator.get()];
 
     await DB.executeSQL(
-      'INSERT INTO assets (aceid, branchid, guid, name, template) VALUES(?, ?, ?, ?, ?)',
+      'INSERT INTO assets_with_partition (aceid, branchid, guid, name, template) VALUES(?, ?, ?, ?, ?)',
       params
     );
     count = count + 1;
