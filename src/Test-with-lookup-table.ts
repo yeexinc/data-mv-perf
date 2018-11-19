@@ -37,7 +37,7 @@ async function singleInsertionRun(
     const params = [idGuid.aceid, idGuid.branchGuid, Random.guid(), Random.str(4), templateGenerator.get()];
 
     await DB.executeSQL(
-      'INSERT INTO assets_with_partition (aceid, branchid, guid, name, template) VALUES(?, ?, ?, ?, ?)',
+      'INSERT INTO assets_partByKey_aceid_100p (aceid, branchid, guid, name, template) VALUES(?, ?, ?, ?, ?)',
       params
     );
     count = count + 1;
@@ -71,7 +71,7 @@ async function main() {
   const batchSize = Number.parseInt(process.env.batchSize as string, 10);
 
   const idGenerator = new AceidBranchIdNumericGenerator(aceidCount, branchGuidCount);
-  
+
   const templateGenerator = new TemplateGenerator(templateCount);
 
   logger.info({ aceidCount, branchGuidCount, templateCount, runnerCount, batchSize, assetCount});
